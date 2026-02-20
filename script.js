@@ -297,7 +297,10 @@
 
     function fetchVisitorInfo() {
         fetch('https://ipwho.is/')
-            .then(function(res) { return res.json(); })
+            .then(function(res) {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.json();
+            })
             .then(function(data) {
                 if (data.success && data.ip && data.country_code) {
                     displayVisitorInfo(data.ip, data.country_code.toUpperCase());
