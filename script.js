@@ -259,68 +259,6 @@
         });
     }
 
-    // ===== IP Geolocation & Auto-Language =====
-    const countryToLang = {
-        BR: 'pt-BR', PT: 'pt-BR',
-        CN: 'zh', TW: 'zh', HK: 'zh', MO: 'zh',
-        ES: 'es', MX: 'es', AR: 'es', CO: 'es', CL: 'es', PE: 'es',
-        VE: 'es', EC: 'es', GT: 'es', CU: 'es', BO: 'es', DO: 'es',
-        HN: 'es', PY: 'es', SV: 'es', NI: 'es', CR: 'es', PA: 'es', UY: 'es',
-        JP: 'ja',
-        RU: 'ru', BY: 'ru', KZ: 'ru', KG: 'ru'
-    };
-
-    function displayVisitorInfo(ip, country) {
-        const countryLower = country.toLowerCase();
-        const visitorInfo = document.getElementById('visitorInfo');
-        const visitorFlag = document.getElementById('visitorFlag');
-        const visitorIp = document.getElementById('visitorIp');
-
-        if (visitorFlag && ip) {
-            visitorFlag.innerHTML = '<img src="https://flagcdn.com/w40/' + countryLower + '.png" width="18" height="13" alt="' + country + '">';
-        }
-        if (visitorIp && ip) {
-            visitorIp.textContent = ip;
-        }
-        if (visitorInfo) {
-            visitorInfo.classList.add('visible');
-        }
-
-        // Auto-set language on first visit (no saved preference)
-        if (!localStorage.getItem('zt-lang') && country) {
-            var detectedLang = countryToLang[country] || 'en';
-            if (detectedLang !== 'en') {
-                setLanguage(detectedLang);
-            }
-        }
-    }
-
-    function fetchVisitorInfo() {
-        fetch('https://ipwho.is/')
-            .then(function(res) {
-                if (!res.ok) throw new Error('HTTP ' + res.status);
-                return res.json();
-            })
-            .then(function(data) {
-                if (data.success && data.ip && data.country_code) {
-                    displayVisitorInfo(data.ip, data.country_code.toUpperCase());
-                } else {
-                    throw new Error('ipwho failed');
-                }
-            })
-            .catch(function() {
-                // Fallback API
-                fetch('https://freeipapi.com/api/json')
-                    .then(function(res) { return res.json(); })
-                    .then(function(data) {
-                        if (data.ipAddress && data.countryCode) {
-                            displayVisitorInfo(data.ipAddress, data.countryCode.toUpperCase());
-                        }
-                    })
-                    .catch(function() {});
-            });
-    }
-
     // ===== Service Worker Registration =====
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
@@ -341,8 +279,6 @@
         if (currentLang !== 'en') {
             setLanguage(currentLang);
         }
-        // Fetch visitor IP & auto-detect language
-        fetchVisitorInfo();
     }
 
     // Event listeners

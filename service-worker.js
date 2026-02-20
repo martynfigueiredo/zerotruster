@@ -1,8 +1,9 @@
 // ZeroTruster Service Worker — Offline PWA Support
-const CACHE_NAME = 'zerotruster-v3';
+const CACHE_NAME = 'zerotruster-v4';
 const ASSETS = [
     '/',
     '/index.html',
+    '/fonts.css',
     '/style.css',
     '/script.js',
     '/i18n.js',
@@ -10,7 +11,9 @@ const ASSETS = [
     '/assets/favicon.svg',
     '/assets/icon-192.png',
     '/assets/icon-512.png',
-    '/assets/apple-touch-icon.png'
+    '/assets/apple-touch-icon.png',
+    '/assets/fonts/inter-latin.woff2',
+    '/assets/fonts/jetbrains-mono-latin.woff2'
 ];
 
 // Install — cache core assets

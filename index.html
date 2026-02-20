@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <!-- Security: Content Security Policy -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://flagcdn.com; connect-src 'self' https://ipwho.is https://freeipapi.com; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://flagcdn.com; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
 
     <!-- Security: Referrer Policy -->
     <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -21,11 +21,10 @@
     <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
     <meta name="msapplication-TileImage" content="assets/mstile-150x150.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preload" href="fonts.css" as="style">
+    <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="fonts.css">
     <link rel="preload" href="style.css" as="style">
     <link rel="preload" href="i18n.js" as="script">
     <link rel="preload" href="script.js" as="script">
@@ -377,10 +376,6 @@
                     <span>ZeroTruster</span>
                 </div>
                 <p class="footer-text">&copy; 2024 ZeroTruster. <span data-i18n="footer_tagline">Never trust, always verify.</span></p>
-            </div>
-            <div class="visitor-info" id="visitorInfo">
-                <span class="visitor-flag" id="visitorFlag"></span>
-                <span class="visitor-ip" id="visitorIp"></span>
             </div>
         </div>
     </footer>

@@ -838,47 +838,7 @@ body:hover .cursor-glow {
 
 .footer-text {
     font-size: 0.8rem;
-    color: var(--text-tertiary);
-}
-
-.visitor-info {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 16px;
-    padding: 6px 14px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.02);
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    color: var(--text-tertiary);
-    width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
-    opacity: 0;
-    transition: opacity 0.6s ease;
-}
-
-.visitor-info.visible {
-    opacity: 1;
-}
-
-.visitor-flag {
-    display: inline-flex;
-    align-items: center;
-}
-
-.visitor-flag img {
-    width: 18px;
-    height: 13px;
-    object-fit: cover;
-    border-radius: 2px;
-}
-
-.visitor-ip {
-    letter-spacing: 0.03em;
+    color: var(--text-secondary);
 }
 
 /* ===== Animations ===== */

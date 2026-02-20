@@ -33,6 +33,7 @@ jobs:
       - name: Minify assets
         run: |
           npm install -g clean-css-cli terser html-minifier-terser
+          cleancss -o fonts.css fonts.css
           cleancss -o style.css style.css
           terser script.js -o script.js -c -m
           terser i18n.js -o i18n.js -c -m
