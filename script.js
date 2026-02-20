@@ -270,39 +270,51 @@
         RU: 'ru', BY: 'ru', KZ: 'ru', KG: 'ru'
     };
 
+    function displayVisitorInfo(ip, country) {
+        const countryLower = country.toLowerCase();
+        const visitorInfo = document.getElementById('visitorInfo');
+        const visitorFlag = document.getElementById('visitorFlag');
+        const visitorIp = document.getElementById('visitorIp');
+
+        if (visitorFlag && ip) {
+            visitorFlag.innerHTML = '<img src="https://flagcdn.com/w40/' + countryLower + '.png" width="18" height="13" alt="' + country + '">';
+        }
+        if (visitorIp && ip) {
+            visitorIp.textContent = ip;
+        }
+        if (visitorInfo) {
+            visitorInfo.classList.add('visible');
+        }
+
+        // Auto-set language on first visit (no saved preference)
+        if (!localStorage.getItem('zt-lang') && country) {
+            var detectedLang = countryToLang[country] || 'en';
+            if (detectedLang !== 'en') {
+                setLanguage(detectedLang);
+            }
+        }
+    }
+
     function fetchVisitorInfo() {
-        fetch('https://ipapi.co/json/')
-            .then(res => res.json())
-            .then(data => {
-                const ip = data.ip;
-                const country = (data.country_code || '').toUpperCase();
-                const countryLower = country.toLowerCase();
-
-                // Display IP + flag in footer
-                const visitorInfo = document.getElementById('visitorInfo');
-                const visitorFlag = document.getElementById('visitorFlag');
-                const visitorIp = document.getElementById('visitorIp');
-
-                if (visitorFlag && ip) {
-                    visitorFlag.innerHTML = '<img src="https://flagcdn.com/w40/' + countryLower + '.png" width="18" height="13" alt="' + country + '">';
-                }
-                if (visitorIp && ip) {
-                    visitorIp.textContent = ip;
-                }
-                if (visitorInfo) {
-                    visitorInfo.classList.add('visible');
-                }
-
-                // Auto-set language on first visit (no saved preference)
-                if (!localStorage.getItem('zt-lang') && country) {
-                    const detectedLang = countryToLang[country] || 'en';
-                    if (detectedLang !== 'en') {
-                        setLanguage(detectedLang);
-                    }
+        fetch('https://ipwho.is/')
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.success && data.ip && data.country_code) {
+                    displayVisitorInfo(data.ip, data.country_code.toUpperCase());
+                } else {
+                    throw new Error('ipwho failed');
                 }
             })
-            .catch(() => {
-                // Silently fail — visitor info stays hidden
+            .catch(function() {
+                // Fallback API
+                fetch('https://freeipapi.com/api/json')
+                    .then(function(res) { return res.json(); })
+                    .then(function(data) {
+                        if (data.ipAddress && data.countryCode) {
+                            displayVisitorInfo(data.ipAddress, data.countryCode.toUpperCase());
+                        }
+                    })
+                    .catch(function() {});
             });
     }
 
