@@ -225,7 +225,7 @@
 
         // Update flag
         if (currentFlag) {
-            currentFlag.textContent = langFlags[lang];
+            currentFlag.innerHTML = langFlags[lang];
         }
 
         // Update active state in dropdown
@@ -259,6 +259,53 @@
         });
     }
 
+    // ===== IP Geolocation & Auto-Language =====
+    const countryToLang = {
+        BR: 'pt-BR', PT: 'pt-BR',
+        CN: 'zh', TW: 'zh', HK: 'zh', MO: 'zh',
+        ES: 'es', MX: 'es', AR: 'es', CO: 'es', CL: 'es', PE: 'es',
+        VE: 'es', EC: 'es', GT: 'es', CU: 'es', BO: 'es', DO: 'es',
+        HN: 'es', PY: 'es', SV: 'es', NI: 'es', CR: 'es', PA: 'es', UY: 'es',
+        JP: 'ja',
+        RU: 'ru', BY: 'ru', KZ: 'ru', KG: 'ru'
+    };
+
+    function fetchVisitorInfo() {
+        fetch('https://ipapi.co/json/')
+            .then(res => res.json())
+            .then(data => {
+                const ip = data.ip;
+                const country = (data.country_code || '').toUpperCase();
+                const countryLower = country.toLowerCase();
+
+                // Display IP + flag in footer
+                const visitorInfo = document.getElementById('visitorInfo');
+                const visitorFlag = document.getElementById('visitorFlag');
+                const visitorIp = document.getElementById('visitorIp');
+
+                if (visitorFlag && ip) {
+                    visitorFlag.innerHTML = '<img src="https://flagcdn.com/w40/' + countryLower + '.png" width="18" height="13" alt="' + country + '">';
+                }
+                if (visitorIp && ip) {
+                    visitorIp.textContent = ip;
+                }
+                if (visitorInfo) {
+                    visitorInfo.classList.add('visible');
+                }
+
+                // Auto-set language on first visit (no saved preference)
+                if (!localStorage.getItem('zt-lang') && country) {
+                    const detectedLang = countryToLang[country] || 'en';
+                    if (detectedLang !== 'en') {
+                        setLanguage(detectedLang);
+                    }
+                }
+            })
+            .catch(() => {
+                // Silently fail — visitor info stays hidden
+            });
+    }
+
     // ===== Service Worker Registration =====
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
@@ -279,6 +326,8 @@
         if (currentLang !== 'en') {
             setLanguage(currentLang);
         }
+        // Fetch visitor IP & auto-detect language
+        fetchVisitorInfo();
     }
 
     // Event listeners

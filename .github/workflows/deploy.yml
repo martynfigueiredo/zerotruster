@@ -25,6 +25,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Minify assets
+        run: |
+          npm install -g clean-css-cli terser html-minifier-terser
+          cleancss -o style.css style.css
+          terser script.js -o script.js -c -m
+          terser i18n.js -o i18n.js -c -m
+          html-minifier-terser --collapse-whitespace --remove-comments --minify-css --minify-js -o index.html index.html
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
