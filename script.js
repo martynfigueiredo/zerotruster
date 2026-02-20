@@ -15,8 +15,11 @@
     let animationId;
 
     function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        // Cache dimensions in a single read to avoid forced reflow
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        canvas.width = w;
+        canvas.height = h;
     }
 
     class Particle {
@@ -270,21 +273,28 @@
 
     // ===== Init =====
     function init() {
-        resizeCanvas();
-        initParticles();
-        animateParticles();
-        setupScrollAnimations();
-        handleScroll();
-        // Apply saved language
-        if (currentLang !== 'en') {
-            setLanguage(currentLang);
-        }
+        // Use rAF to batch layout reads/writes and avoid forced reflow
+        requestAnimationFrame(() => {
+            resizeCanvas();
+            initParticles();
+            animateParticles();
+            setupScrollAnimations();
+            handleScroll();
+            // Apply saved language
+            if (currentLang !== 'en') {
+                setLanguage(currentLang);
+            }
+        });
     }
 
-    // Event listeners
+    // Event listeners — debounce resize with rAF
+    let resizeRafId;
     window.addEventListener('resize', () => {
-        resizeCanvas();
-        initParticles();
+        cancelAnimationFrame(resizeRafId);
+        resizeRafId = requestAnimationFrame(() => {
+            resizeCanvas();
+            initParticles();
+        });
     });
 
     window.addEventListener('scroll', handleScroll, { passive: true });
